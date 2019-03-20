@@ -29,8 +29,5 @@ source('example_SWP_algo.R')
 ```
 
 TODO:
-- make notation consistent (e.g. strong weak pruning / strong weak cuttting, bordavoting/voting_borda etc..)
 - improve inline documentation
-- write usage instructions
-- remove .History and hidden files (?)
-- remove print instruction in src files 
+- expand usage instructions 
