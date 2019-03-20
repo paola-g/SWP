@@ -23,6 +23,10 @@ In R, change directory to the <b>drivers/</b> folder and run:<br/>
 ```R
 source('driver_SWP_paper.R')
 ```
+or 
+```R
+source('example_SWP_algo.R')
+```
 
 TODO:
 - make notation consistent (e.g. strong weak pruning / strong weak cuttting, bordavoting/voting_borda etc..)
