@@ -1,7 +1,7 @@
 #' Driver script to replicate experiments described in 
 #' https://www.worldscientific.com/doi/10.1142/S0129065719500072 
 #' 
-#' Borda voting is firstly applied to input graphs, then Strong Weak Pruning is
+#' First, borda voting is applied to input graphs, then Strong Weak Pruning is
 #' used to detect relevant edges and finally the results are aggregated to 
 #' generate masks ready to be applied to the inputs graphs.
 #' 
@@ -12,10 +12,10 @@
 rm(list = ls())
 
 # import libraries
-source("../src/votingBorda.R", chdir = T)
-source("../src/borda_extracting_mask.R", chdir = T)
-source("../src/sw_cutting.R", chdir = T)
-source("../src/graphUtils.R", chdir = T)
+source("../src/borda_voting.R", chdir = T)
+source("../src/borda_mask.R", chdir = T)
+source("../src/SWP.R", chdir = T)
+source("../src/graph_utils.R", chdir = T)
 
 
 #' -----------------------------------------------------------------------------
