@@ -1,33 +1,27 @@
-#' votingBorda
+#' borda_voting
 #' 
 #' functions for pruning and aggregating edges of graphs
 #' It means that given a set of graphs it will be done a voting in order to
 #' get a ranking of the edges
-#' 
-#' It works on DTI info.
-#' 
+#'  
 #' Author: Emanuele Pesce
 library(TopKLists)
-
-source("../src/graphUtils.R")
+source("../src/graph_utils.R")
 
 #' Aggregates matrices
-#' Get all matrix in 'path' and merge them all in a matrix in which each 
-#' row is a sujbect (file) and each column is a value
-#' This is necessary for applying borda voting afterwards
+#' Get all matrices in 'path' and merge them all in a new matrix in which each 
+#' row is a subject (file) and each column is a value
+#' Required to perform borda voting afterwards
 #'  
 #' @param path, path of matrices to aggregate
 #' @return A list of vectors
 #' @examples
 #' M <-  m <- genMatrix("./../../data/toyData/controls/")
 genMatrix <- function(path = "./../../data/structural/naive/Controls/") {
-  # get all filenames
   print(path)
   fileNames  <- list.files(path, pattern = "*.txt")
   nRoi = 90
   
-  # build names, creates a vector where each element is a string and rapresent 
-  # row-column notations
   v_names <- list()
   for (i in 1:nRoi){
     si <- toString(i)
@@ -38,27 +32,22 @@ genMatrix <- function(path = "./../../data/structural/naive/Controls/") {
   }
   
   M <- list()
-  #for each file, read it as matrix, then transform it in a vector and append to M
   for (i in 1:length(fileNames)){
     fname <- fileNames[i]
     dat <- read.csv(paste(path, fname, sep = ""), header = FALSE, sep = " ")
     m <- as.matrix(dat);
     v <- as.vector(t(m));
-    # associates names
     names(v) <- v_names
     v <- sort(v, decreasing = TRUE)
-    # saves names after sorting elements
     M[[i]] <- names(v)
   }
-  
-  # return
   return(M)
 }
+
 
 writeBordaMatrix <- function(filename, bordaTop, bordaScores, n=90){
   vec <- bordaScores
   names(vec) <- bordaTop
-  
   M <- matrix(nrow = 90, ncol = 90)
   for(i in 1:n){
     for(j in 1:n){
@@ -66,22 +55,5 @@ writeBordaMatrix <- function(filename, bordaTop, bordaScores, n=90){
       M[i,j] <- vec[idx]
     }
   }
-  
   write.table(M, file = filename, row.names = FALSE, col.names=FALSE )
 }
-
-
-# if(interactive()){
-#   mControls <- genMatrix("./../../data/toyData/controls/")
-#   mPatients <- genMatrix("./../../data/toyData/patients/")
-#   
-#   kv <- 10
-#   c_outBorda=Borda(mControls,space = mControls, k = kv)
-#   p_outBorda=Borda(mPatients,space = mPatients)
-#   
-# #   writeBordaMatrix(filename = "./../../data/toyData/extract/bordaMatrixControls.txt",
-# #                    c_outBorda$TopK$mean, c_outBorda$Scores$mean)
-# #   
-# #   writeBordaMatrix(filename = "./../../data/toyData/extract/bordaMatrixPatients.txt",
-# #                    p_outBorda$TopK$mean, p_outBorda$Scores$mean)  
-# }

@@ -1,7 +1,6 @@
-#' graphUtils
+#' graph_utils
 #' 
-#' functions for working with graph
-#' Function which names start with 'i' are wrappers of igraph library
+#' Utility functions used to work with graphs
 #' 
 #' Author: Emanuele Pesce
 library(igraph)
@@ -15,7 +14,6 @@ getMatrixFromFile <- function(filename, sep = " "){
   dat <- read.csv(filename, header = FALSE, sep = sep)
   m <- as.matrix(dat);
   
-  #return
   return(m)
 }
 
@@ -28,7 +26,6 @@ getMatrixFromFile <- function(filename, sep = " "){
 #' edges <- getEdgesAsVector(graph, c("1_2",3_4") for retriving edges [1,2] and 
 #' [3,4]
 getEdgesAsVector <- function(graph, listNames){
-  
   listEdges <- list()
   for(i in 1:length(listNames)){
     s <- listNames[i]
@@ -37,6 +34,7 @@ getEdgesAsVector <- function(graph, listNames){
     col <- strtoi(ss[[1]][2])
     listEdges[i] <- graph[row, col]
   }
+  
   return(listEdges)
 }
 
@@ -50,11 +48,10 @@ i_adjacencyFromFile <- function(filename){
   m <- as.matrix(dat);
   g <- graph.adjacency(m, mode = "directed", weighted = TRUE);
   
-  # return
   return(g)
 }
 
-#' Removes an edge from vertex v1 to vertex v2
+#' Removes an edge
 #' @param v1 vertex
 #' @param v2 vertex
 #' @return g igraph without edge v1 -> v2
@@ -69,19 +66,3 @@ removeEdge <- function(graph, v1, v2){
   
   return(graph)
 }
-
-
-
-### example
-# if(interactive()){
-#   graph <- getMatrixFromFile("./../../data/toyData/controls/CTRL_amore.txt")
-#   
-#   listNames <- c("76_74", "75_73", "36_68", "80_82", "41_37", "79_81", "35_67", "80_18", "17_29", "36_35")
-#   edges <- getEdgesAsVector(graph, listNames)
-#   
-#   g <- i_adjacencyFromFile("./../../data/toyData/controls/CTRL_0.txt")
-#   
-#   g1 <- removeEdge(g, 90, 89)
-# }
-
-

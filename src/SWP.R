@@ -1,32 +1,30 @@
-#' sw_cutting (Strong/weak ties cutting)
+#' SWP (Strong/weak pruning)
 #' 
-#' Algorithm for pruning edges from a graph using strong weak ties method whose 
-#' idea is: keep all the strong ties (minimum spanning tree) and keep all the
-#' weak ties which are "important".
+#' Algorithm to prune edges from a graph using strong weak ties method whose 
+#' idea is described here:
+#' https://www.worldscientific.com/doi/10.1142/S0129065719500072 
 #' 
 #' Author: Emanuele Pesce
 library(igraph)
-source("graphUtils.R", chdir = T)
+source("graph_utils.R", chdir = T)
 
-
-#' Cut the edges from a graph using strong weak ties cutting.
+#' Prune the edges from a graph using SWP.
 #' The idea is: 
 #' 1. Computes all shortest path among all vertices
-#' 2. Put edges which are part of a shortest path in a set (strong)
-#' 3. For each edge which doesn't belong to the strong set, check if the 
-#'    fraction of its strong neighbors edges is greater than a threshold. 
-#'    If it's so remove the edge (this means that in this area there are a
-#'    lot of util edges)  
+#' 2. Put the edges which are part of a shortest path in a set (strong)
+#' 3. For each edge which doesn't belong to the strong set, check if in its 
+#'    neighborhood there are enough strong edges. In positive case the edge is
+#'    removed because it means that it that area there are a enough "utils" edges.
 #' 
 #' @param graph, a graph in format igraph
-#' @param threshold, a threshold :)
-#' @param invert, if TRUE normalize all weights and do 1-weights in order to 
-#'        invert the values on edges (the max value will be min value).
-#'        This is because shortest paths will consider strong edges those ones 
-#'        which have small values (So basically we need to solve a min problem).
-#' @param flow, if is equal to 0 means that algorithm works ignoring the flow, 
-#'        otherwise it will consider the flow when threshold are computed for 
-#'        deciding if a NOT util edge should be cutted or don't.
+#' @param threshold, a threshold 
+#' @param invert, if TRUE, all weights are normalized and 1-weight formula is 
+#'        applied (the max value will become the min)
+#'        This is because shortest paths consider strong edges those ones 
+#'        which have small values (min problem).
+#' @param flow, if is equal to 0 means the algorithm ignores the flow, 
+#'        otherwise it considers the flow when threshold are computed in order to
+#'        decide if a NOT util edge should be pruned.
 #' @return toReturn a list of things:
 #'         -v_strong : set of util vertices (shortest paths)
 #'         -n_strong: number of edges in v_util
@@ -41,12 +39,7 @@ sw_cutting <- function(graph, threshold=0.5, invert = FALSE, flow=0){
   
   ### normalization and invert the values in order to calculate max flow with
   ### shortest path
-  ### it only works if invert is equal to FALSE
   if(invert==TRUE){
-#     e_weights <- E(graph)$weight 
-#     ne_weights <- (e_weights-min(e_weights))/(max(e_weights)-min(e_weights))
-#     E(graph)$weight  <- 1 - ne_weights
-  
       e_weights <- E(graph)$weight 
       E(graph)$weight  <- 1 - e_weights
   }

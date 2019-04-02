@@ -27,7 +27,4 @@ or
 ```R
 source('example_SWP_algo.R')
 ```
-
-TODO:
-- improve inline documentation
-- expand usage instructions 
+Outputs are saved in ```data/other/borda```
